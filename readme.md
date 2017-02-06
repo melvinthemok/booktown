@@ -18,12 +18,12 @@ To get started we'll need to import the booktown.sql file.
 ```
 booktown=# \d books
        Table "public.books"
-   Column   |  Type   | Modifiers 
+   Column   |  Type   | Modifiers
 ------------+---------+-----------
  id         | integer | not null
  title      | text    | not null
- author_id  | integer | 
- subject_id | integer | 
+ author_id  | integer |
+ subject_id | integer |
 Indexes:
     "books_id_pkey" PRIMARY KEY, btree (id)
     "books_title_idx" btree (title)
@@ -51,42 +51,121 @@ Complete the following exercises to practice using SQL.
 
 ###Order
 1. Find all subjects sorted by subject
+
+<!-- SELECT * FROM subjects ORDER BY subject ASC; -->
+
 2. Find all subjects sorted by location
+
+<!-- SELECT * FROM subjects ORDER BY location ASC; -->
 
 ###Where
 1. Find the book "Little Women"
+
+<!-- SELECT * FROM books WHERE title = 'Little Women'; -->
+
 2. Find all books containing the word "Python"
+
+<!-- SELECT * FROM books WHERE title LIKE '%Python%'; -->
+
 3. Find all subjects with the location "Main St" sort them by subject
+
+<!-- SELECT * FROM subjects WHERE location = 'Main St' ORDER BY subject ASC; -->
 
 
 ###Joins
 
 * Find all books about Computers list ONLY book title
+
+<!-- SELECT title FROM books JOIN subjects ON books.subject_id = subjects.id WHERE subjects.id = 4; -->
+
 * Find all books and display a result table with ONLY the following columns
 	* Book title
+
+<!-- SELECT title FROM books; -->
+
 	* Author's first name
+
+<!-- SELECT authors.first_name FROM authors JOIN books ON books.author_id = authors.id; -->
+
 	* Author's last name
+
+<!-- SELECT authors.last_name FROM authors JOIN books ON books.author_id = authors.id; -->
+
 	* Book subject
+
+<!-- SELECT subjects.subject FROM subjects JOIN books ON books.subject_id = subjects.id; -->
+<!-- SELECT DISTINCT ON (subjects.subject) subjects.subject FROM subjects JOIN books ON books.subject_id = subjects.id; -->
+
 * Find all books that are listed in the stock table
 	* Sort them by retail price (most expensive first)
+
+<!-- SELECT table_name FROM information_schema.columns WHERE column_name = 'isbn'; -->
+<!-- SELECT * FROM stock JOIN editions ON stock.isbn = editions.isbn ORDER BY retail ASC; -->
+
 	* Display ONLY: title and price
+
+<!-- SELECT books.title, stock.retail FROM stock JOIN editions ON stock.isbn = editions.isbn JOIN books ON editions.book_id = books.id; -->
+
 * Find the book "Dune" and display ONLY the following columns
 	* Book title
+
+<!-- SELECT title FROM books WHERE title = 'Dune'; -->
+
 	* ISBN number
+
+<!-- SELECT table_name FROM information_schema.columns WHERE column_name = 'isbn'; -->
+<!-- SELECT editions.isbn FROM books JOIN editions ON books.id = editions.book_id WHERE books.title = 'Dune'; -->
+
 	* Publisher name
+
+<!-- SELECT publishers.name FROM books JOIN editions ON books.id = editions.book_id JOIN publishers ON editions.publisher_id = publishers.id WHERE books.title = 'Dune'; -->
+<!-- SELECT DISTINCT ON (publishers.name) publishers.name FROM books JOIN editions ON books.id = editions.book_id JOIN publishers ON editions.publisher_id = publishers.id WHERE books.title = 'Dune'; -->
+
 	* Retail price
+
+<!-- SELECT table_name FROM information_schema.columns WHERE column_name = 'retail'; -->
+<!-- SELECT stock.retail FROM stock JOIN editions ON stock.isbn = editions.isbn JOIN books ON editions.book_id = books.id WHERE books.title = 'Dune'; -->
+
 * Find all shipments sorted by ship date display a result table with ONLY the following columns:
 	* Customer first name
+
+<!-- SELECT customers.first_name FROM customers JOIN shipments ON customers.id = shipments.customer_id ORDER BY shipments.ship_date ASC; -->
+
 	* Customer last name
+
+<!-- SELECT customers.last_name FROM customers JOIN shipments ON customers.id = shipments.customer_id ORDER BY shipments.ship_date ASC; -->
+
 	* ship date
+
+<!-- SELECT ship_date FROM shipments ORDER BY ship_date ASC; -->
+
 	* book title
+
+<!-- SELECT books.title FROM books JOIN editions ON books.id = editions.book_id JOIN shipments ON editions.isbn = shipments.isbn ORDER BY ship_date ASC; -->
 
 ###Grouping and Counting
 
 1. Get the COUNT of all books
+
+<!-- SELECT COUNT(*) FROM books; -->
+
 * Get the COUNT of all Locations
+
+<!-- SELECT table_name FROM information_schema.columns WHERE column_name = 'location'; -->
+<!-- SELECT COUNT('subjects.location') FROM subjects; -->
+<!-- SELECT COUNT(*) FROM subjects; -->
+<!-- SELECT COUNT(*) FROM subjects WHERE location NOTNULL; -->
+<!-- SELECT COUNT(location) FROM subjects; -->
+
 * Get the COUNT of each unique location in the subjects table. Display the count and the location name. (hint: requires GROUP BY).
+
+<!-- SELECT location, COUNT(location) FROM subjects WHERE location NOTNULL GROUP BY location; -->
+
 * List all books. Display the book_id, title, and a count of how many editions each book has. (hint: requires GROUP BY and JOIN)
+
+
+
+
 
 ####YAY! You're done!!
 
